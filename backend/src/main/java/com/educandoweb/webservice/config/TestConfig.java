@@ -1,4 +1,4 @@
-package com.educandoweb.webservice.Config;
+package com.educandoweb.webservice.config;
 
 import java.time.Instant;
 import java.util.Arrays;
