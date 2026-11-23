@@ -18,10 +18,14 @@ export type CreateUserDTO = Omit<User, 'id'|'createdAt'|'updatedAt'|'status'> &{
 //Atualizar dados de Usuario (Parcial, id nao atualiza)
 export type UpdateUserDTO =  Partial<Omit<User, 'id' | 'createdAt' | 'updatedAt'>>;
 
-// Contrato para resposta paginada de listagem de usuários
-export interface PaginatedUsersResponse {
-  data: User[];
-  total: number;
-  page: number;
-  limit: number;
+// Espelha exatamente o objeto 
+export interface SpringPage<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  number: number; // Índice da página atual (começa em 0)
+  size: number;   // Quantidade de itens por página
+  first: boolean;
+  last: boolean;
+  empty: boolean;
 }
