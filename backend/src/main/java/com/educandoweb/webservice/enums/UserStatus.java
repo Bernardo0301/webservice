@@ -1,3 +1,6 @@
+package com.educandoweb.webservice.enums;
+
+
 public enum UserStatus {
 
     ACTIVE("ACTIVE"),
