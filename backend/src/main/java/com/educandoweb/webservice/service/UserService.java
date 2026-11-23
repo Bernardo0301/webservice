@@ -2,6 +2,9 @@ package com.educandoweb.webservice.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 
 import com.educandoweb.webservice.repository.UserRepository;
 import java.util.List;
@@ -24,4 +27,8 @@ public class UserService {
         Optional <User> obj = repository.findById(id);
         return obj.get();
     }
+
+    public Page<User> findAllPaged(Pageable pageable) {
+    return repository.findAll(pageable);
+}
 }
