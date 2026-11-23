@@ -2,6 +2,7 @@ package com.educandoweb.webservice.model;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Objects;
 
 import com.educandoweb.webservice.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -15,22 +16,24 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tb_order")
-public class Order implements Serializable{
+public class Order implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @Id //define Pk
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //autoimplementada 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant moment;
 
     @ManyToOne
-    @JoinColumn(name ="client_id")
+    @JoinColumn(name = "client_id")
     private User client;
 
     @Enumerated(EnumType.STRING)
@@ -40,9 +43,8 @@ public class Order implements Serializable{
     private Instant createdAt;
     private Instant updatedAt;
 
-
-//Construtor
-    public Order(){
+    //construtor
+    public Order() {
     }
 
     public Order(Long id, Instant moment, User client) {
@@ -51,7 +53,20 @@ public class Order implements Serializable{
         this.client = client;
     }
 
-//Getters e Setters
+    // Callbacks de ciclo de vida do JPA (Auditoria automática)
+    @PrePersist
+    private void prePersist() {
+        Instant now = Instant.now();
+        this.createdAt = now;
+        this.updatedAt = now;
+    }
+
+    @PreUpdate
+    private void preUpdate() {
+        this.updatedAt = Instant.now();
+    }
+
+    // Getters e Setters
     public Long getId() {
         return id;
     }
@@ -62,31 +77,6 @@ public class Order implements Serializable{
 
     public Instant getMoment() {
         return moment;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((id == null) ? 0 : id.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Order other = (Order) obj;
-        if (id == null) {
-            if (other.id != null)
-                return false;
-        } else if (!id.equals(other.id))
-            return false;
-        return true;
     }
 
     public void setMoment(Instant moment) {
@@ -101,5 +91,34 @@ public class Order implements Serializable{
         this.client = client;
     }
 
-    
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+        Order other = (Order) obj;
+        return Objects.equals(id, other.id);
+    }
 }
