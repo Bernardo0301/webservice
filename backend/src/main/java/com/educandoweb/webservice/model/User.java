@@ -1,12 +1,17 @@
 package com.educandoweb.webservice.model;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.educandoweb.webservice.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,11 +33,18 @@ public class User implements Serializable{
     @JsonIgnore 
     @OneToMany(mappedBy = "client")
     private List<Order> orders = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    private UserStatus status = UserStatus.ACTIVE;
+
+    @Column(updatable = false) private Instant createdAt;
+    private Instant updatedAt;
     
     public List<Order> getOrders() {
         return orders;
     }
 
+    //Construtor
     public User(){
 
     }
@@ -45,6 +57,7 @@ public class User implements Serializable{
         this.password = password;
     }
 
+    //Getters e Setters
     public Long getId() {
         return id;
     }
