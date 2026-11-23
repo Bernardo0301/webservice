@@ -3,9 +3,13 @@ package com.educandoweb.webservice.model;
 import java.io.Serializable;
 import java.time.Instant;
 
+import com.educandoweb.webservice.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,6 +25,7 @@ public class Order implements Serializable{
     @Id //define Pk
     @GeneratedValue(strategy = GenerationType.IDENTITY) //autoimplementada 
     private Long id;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant moment;
 
@@ -28,6 +33,15 @@ public class Order implements Serializable{
     @JoinColumn(name ="client_id")
     private User client;
 
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus = OrderStatus.WAITING_PAYMENT;
+
+    @Column(updatable = false)
+    private Instant createdAt;
+    private Instant updatedAt;
+
+
+//Construtor
     public Order(){
     }
 
@@ -37,6 +51,7 @@ public class Order implements Serializable{
         this.client = client;
     }
 
+//Getters e Setters
     public Long getId() {
         return id;
     }
